@@ -2,7 +2,7 @@
     "rewrites": [
         {
             "source": "/chat",
-            "destination": "/backend/server.py"
+            "destination": "/api/index.py"
         },
         {
             "source": "/(.*)",
