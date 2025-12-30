@@ -1,0 +1,12 @@
+{
+    "rewrites": [
+        {
+            "source": "/chat",
+            "destination": "/backend/server.py"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/frontend/$1"
+        }
+    ]
+}
