@@ -21,6 +21,10 @@ app.add_middleware(
 class ChatRequest(BaseModel):
     message: str
 
+@app.get("/api/health")
+def health_check():
+    return {"status": "ok"}
+
 @app.post("/chat")
 async def chat_endpoint(request: ChatRequest):
     try:
@@ -28,15 +32,7 @@ async def chat_endpoint(request: ChatRequest):
         result = await agent_app.ainvoke(inputs)
         return {"response": result["messages"][-1].content}
     except Exception as e:
+        # Log error for Vercel logs
+        print(f"Error processing request: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-# Mount static files (Frontend)
-# Assuming running from backend/ directory or root, adjusting path to find frontend
-frontend_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend")
-if os.path.exists(frontend_path):
-    app.mount("/", StaticFiles(directory=frontend_path, html=True), name="static")
-else:
-    print(f"Warning: Frontend directory not found at {frontend_path}")
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
